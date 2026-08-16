@@ -1,0 +1,56 @@
+.win-button {
+    width: 100%;
+    padding-inline: 15px;
+    padding-block: 15px;
+
+    color: rgb(211 215 255);
+    text-align: left;
+
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+
+    transition: 0.05s ease-out;
+}
+
+.btn-index {
+    display: inline-block;
+    margin-right: 15px;
+    scale: 0.8;
+    opacity: 0.5;
+    color: #a1bbff;
+}
+
+.win-button svg, .win-button img {
+    stroke: rgb(211 215 255);
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+    translate: 0 -2px;
+    width: 20px;
+
+    transition: 0.05s ease-out;
+}
+
+.win-button img {
+    scale: 1.3;
+}
+
+.win-button.selected {
+    background: rgb(140 176 255 / 0.05);
+    color: #a1bbff;
+}
+
+.win-button.selected svg {
+    stroke: #a1bbff;
+}
+
+.btn-arrow {
+    display: inline-block;
+    float: right;
+    vertical-align: middle;
+    translate: 15px 2px;
+    scale: 0.8;
+    opacity: 0.5;
+}

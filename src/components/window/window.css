@@ -1,0 +1,97 @@
+.background {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: 1s ease;
+
+    background: #1a1c24;
+    border: 2px solid #afaccb;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.window {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    top: 50%;
+    translate: 0 -50%;
+    width: 100%;
+
+    padding: 15px;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+}
+
+.window .window-buttons {
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #a1bbff33;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #a1bbff;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: white;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:active {
+    background: #a1bbff;
+}
+
+.window .search-bar {
+    background: none;
+    border: none;
+    padding: 10px;
+    font-size: 15px;
+    color: #a1bbff;
+    outline: none;
+    translate: 0 -10px;
+}
+
+.window .search-bar::placeholder {
+    color: #afaccb;
+    opacity: 0.5;
+}
+
+.window .search-bar::selection {
+    background: rgb(105 136 255 / 0.33);
+    color: white;
+}
+
+.path {
+    font-size: 13px;
+    margin-bottom: 10px;
+    translate: 0 -5px;
+}
+
+.path p {
+    display: inline-block;
+    float: left;
+    translate: none;
+    margin-right: 10px;
+}
+
+.path p:not(.last, .btn-arrow) {
+    color: #a1bbff;
+    opacity: 0.5;
+}

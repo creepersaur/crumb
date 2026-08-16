@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    color: white;
+    font-family: "JetBrainsMono NF";
+    font-weight: 200;
+    letter-spacing: 0.5px;
+}
+
+html, body {
+    overflow: hidden;
+}
