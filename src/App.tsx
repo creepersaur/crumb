@@ -84,7 +84,7 @@ export default function App() {
     const pendingHeightRef = React.useRef<number | null>(null);
 
     const [selected, setSelected] = React.useState(0);
-    const [appsList, setAppsList] = React.useState<any[]>([]);
+    const [appsList, setAppsList] = React.useState<any[] | string>("loading apps...\n(try again in a few seconds)");
     React.useEffect(() => {
         let cancelled = false;
 

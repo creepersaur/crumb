@@ -89,9 +89,18 @@
     float: left;
     translate: none;
     margin-right: 10px;
+    user-select: none;
 }
 
 .path p:not(.last, .btn-arrow) {
     color: #a1bbff;
     opacity: 0.5;
+    cursor: pointer;
+}
+
+.window .screen-text {
+    text-align: center;
+    width: 100%;
+    opacity: 0.5;
+    padding-block: 30px;
 }

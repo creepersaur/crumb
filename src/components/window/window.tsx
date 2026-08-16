@@ -6,7 +6,7 @@ import {appWindow} from "@tauri-apps/api/window";
 type Buttons = {
     Name: string,
     Icon?: any,
-    Submenu?: boolean | Buttons,
+    Submenu?: boolean | Buttons | string,
     Action?: (Submenu: any, setScreen: any) => void,
 }[];
 type HistoryItem = {
@@ -17,7 +17,7 @@ type WindowProps = {
     children?: React.ReactNode;
     buttons?: Buttons,
     selected: number,
-    setSelected: React.Dispatch<React.SetStateAction<number>>
+    setSelected: React.Dispatch<React.SetStateAction<number>>,
 };
 
 function sortByStartsWith<T>(items: T[], query: string, getText = (item: any) => item.Name) {
@@ -49,12 +49,29 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
         const [filter, setFilter] = React.useState<string>("");
 
         React.useEffect(() => {
-            if (history.length === 1) {
-                setScreen(buttons ?? []);
-                setHistory([
-                    {name: "Home", buttons: buttons ?? []}
-                ]);
-            }
+            if (!buttons) return;
+
+            setScreen(prev => {
+                // We're on the root screen
+                if (history.length === 1) {
+                    return buttons;
+                }
+
+                // Find the current history entry and update its buttons
+                const current = history[history.length - 1];
+
+                if (current.buttons instanceof Array) {
+                    return current.buttons;
+                }
+
+                return prev;
+            });
+
+            setHistory(prev => {
+                const next = [...prev];
+                next[0] = {name: "Home", buttons};
+                return next;
+            });
         }, [buttons]);
 
         React.useEffect(() => {
@@ -167,12 +184,18 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                     const is_not_last = i < history.length - 1;
 
                     return <React.Fragment key={`path_${i}`}>
-                        <p className={!is_not_last ? "last" : ""}>{item.name}</p>
+                        <p className={!is_not_last ? "last" : ""} onClick={() => setHistory(prev => {
+                            const sliced = prev.slice(0, i + 1);
+                            setScreen(sliced[sliced.length - 1].buttons)
+                            return sliced;
+                        })}>{item.name}</p>
                         {is_not_last && <p className="btn-arrow">{">"}</p>}
                     </React.Fragment>
                 })}</div>
 
                 <div className="window-buttons">
+                    {typeof screen == "string" &&
+                        <div className="screen-text" style={{whiteSpace: "pre-line"}}>{screen}</div>}
                     {typeof screen != "string" && sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter)
                         .map(({Name, Icon, Submenu, Action}, i) => {
                             return <WinButton

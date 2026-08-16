@@ -53,4 +53,5 @@
     translate: 15px 2px;
     scale: 0.8;
     opacity: 0.5;
+    pointer-events: none;
 }
