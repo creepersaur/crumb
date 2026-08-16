@@ -214,14 +214,23 @@ export default function App() {
                     {
                         Name: "Sleep",
                         Icon: Lucide.BedDouble,
+                        Action: () => {
+                            invoke("power", {action: "sleep"}).then()
+                        }
                     },
                     {
                         Name: "Restart",
                         Icon: Lucide.RefreshCw,
+                        Action: () => {
+                            invoke("power", {action: "restart"}).then()
+                        }
                     },
                     {
                         Name: "Turn Off",
                         Icon: Lucide.Power,
+                        Action: () => {
+                            invoke("power", {action: "shutdown"}).then()
+                        }
                     },
                 ],
             },

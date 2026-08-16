@@ -93,17 +93,17 @@ async fn get_apps() -> Vec<FrontEndApp> {
                 }
             }
 
-            if let Some(path) = resolved_path {
-                list.push(FrontEndApp {
-                    name: clean_app_name(&clean_app_name(&app.name)),
-                    icon_data,
-                    path,
-                });
-            } else if app.path.exists() {
+            if app.path.exists() {
                 list.push(FrontEndApp {
                     name: clean_app_name(&clean_app_name(&app.name)),
                     icon_data,
                     path: app.path,
+                });
+            } else if let Some(path) = resolved_path {
+                list.push(FrontEndApp {
+                    name: clean_app_name(&clean_app_name(&app.name)),
+                    icon_data,
+                    path,
                 });
             }
         }
@@ -116,9 +116,26 @@ async fn get_apps() -> Vec<FrontEndApp> {
     .expect("blocking function fail")
 }
 
+#[tauri::command]
+fn power(action: String) -> Result<(), String> {
+    let args = match action.as_str() {
+        "shutdown" => vec!["/s", "/t", "0"],
+        "restart" => vec!["/r", "/t", "0"],
+        "sleep" => vec!["/h"],
+        _ => return Err("Unknown power action".into()),
+    };
+
+    std::process::Command::new("shutdown")
+        .args(args)
+        .spawn()
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_apps, open_app])
+        .invoke_handler(tauri::generate_handler![get_apps, open_app, power])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
