@@ -200,37 +200,54 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                 <div className="window-buttons">
                     {typeof screen == "string" &&
                         <div className="screen-text" style={{whiteSpace: "pre-line"}}>{screen}</div>}
-                    {typeof screen != "string" && sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter)
-                        .map(({Name, Icon, Submenu, Action}, i) => {
-                            return <WinButton
-                                key={`path_${i}`}
-                                id={i}
-                                selected={selected === i}
-                                submenu={Submenu ? Name : null}
-                                onClick={() => {
-                                    if (Submenu) {
-                                        setScreen(Submenu == true ? Name : Submenu);
-                                        setHistory(prev => [...prev, Submenu == true ? {name: Name, buttons: Name} : {
-                                            name: Name,
-                                            buttons: Submenu
-                                        }]);
-                                    }
+                    {(() => {
+                            if (typeof screen == "string") return;
 
-                                    searchRef.current!.value = "";
-                                    setFilter("");
-                                    console.log("click")
-                                    if (Action) Action(Submenu, setScreen);
-                                }}
-                                onMouseEnter={() => setSelected(i)}
-                            >
-                                {Icon && (typeof Icon == "string" ? <img src={Icon} alt="icon"/> : <Icon/>)}<HighlightMatch text={Name} query={filter} />
-                            </WinButton>
-                        })}
+                            let items = sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter);
+
+                            if (!items.length) return <div className="screen-text" style={{whiteSpace: "pre-line"}}>{"<No Items>"}</div>
+
+                            return typeof screen != "string" && items
+                                .map(({Name, Icon, Submenu, Action}, i) => {
+                                    return <WinButton
+                                        key={`path_${i}`}
+                                        id={i}
+                                        selected={selected === i}
+                                        submenu={Submenu ? Name : null}
+                                        onClick={() => {
+                                            if (Submenu) {
+                                                setScreen(Submenu == true ? Name : Submenu);
+                                                setHistory(prev => [...prev, Submenu == true ? {
+                                                    name: Name,
+                                                    buttons: Name
+                                                } : {
+                                                    name: Name,
+                                                    buttons: Submenu
+                                                }]);
+                                            }
+
+                                            searchRef.current!.value = "";
+                                            setFilter("");
+                                            console.log("click")
+                                            if (Action) Action(Submenu, setScreen);
+                                        }}
+                                        onMouseEnter={() => setSelected(i)}
+                                    >
+                                        {Icon && (typeof Icon == "string" ? <img src={Icon} alt="icon"/> :
+                                            <Icon/>)}<HighlightMatch
+                                        text={Name} query={filter}/>
+                                    </WinButton>
+                                })
+                        }
+                    )()}
                 </div>
 
-                {children}
+                {
+                    children
+                }
             </div>
-        );
+        )
+            ;
     }
 );
 
