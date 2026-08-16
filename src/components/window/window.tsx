@@ -2,6 +2,7 @@ import "./window.css"
 import React from "react";
 import WinButton from "../window_button/winbutton.tsx";
 import {appWindow} from "@tauri-apps/api/window";
+import HighlightMatch from "../highlight_match/highlight_match.tsx";
 
 type Buttons = {
     Name: string,
@@ -222,7 +223,7 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                                 }}
                                 onMouseEnter={() => setSelected(i)}
                             >
-                                {Icon && (typeof Icon == "string" ? <img src={Icon} alt="icon"/> : <Icon/>)}{Name}
+                                {Icon && (typeof Icon == "string" ? <img src={Icon} alt="icon"/> : <Icon/>)}<HighlightMatch text={Name} query={filter} />
                             </WinButton>
                         })}
                 </div>
