@@ -125,12 +125,15 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                     return;
                 }
 
-                if (e.key == "ArrowDown" || e.key == "Tab") {
-                    setSelected(prev => ++prev % screen.length);
-                    return;
-                } else if (e.key == "ArrowUp") {
-                    setSelected(prev => (--prev + screen.length) % screen.length);
-                    return;
+                if (typeof screen != "string") {
+                    const length = screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())).length;
+                    if (e.key == "ArrowDown" || e.key == "Tab") {
+                        setSelected(prev => ++prev % length);
+                        return;
+                    } else if (e.key == "ArrowUp") {
+                        setSelected(prev => (--prev + length) % length);
+                        return;
+                    }
                 }
 
                 if (e.key == "Enter") {
