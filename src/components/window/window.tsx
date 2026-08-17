@@ -3,6 +3,7 @@ import React from "react";
 import WinButton from "../window_button/winbutton.tsx";
 import {appWindow} from "@tauri-apps/api/window";
 import HighlightMatch from "../highlight_match/highlight_match.tsx";
+import {fuzzyFilter} from "../fuzzy/fuzzy_filter.tsx";
 
 type Buttons = {
     Name: string,
@@ -20,26 +21,6 @@ type WindowProps = {
     selected: number,
     setSelected: React.Dispatch<React.SetStateAction<number>>,
 };
-
-function sortByStartsWith<T>(items: T[], query: string, getText = (item: any) => item.Name) {
-    if (query.length < 1) return items;
-
-    const q = query.toLowerCase();
-
-    return [...items].sort((a, b) => {
-        const aText = getText(a).toLowerCase();
-        const bText = getText(b).toLowerCase();
-
-        const aStarts = aText.startsWith(q);
-        const bStarts = bText.startsWith(q);
-
-        if (aStarts && !bStarts) return -1;
-        if (!aStarts && bStarts) return 1;
-
-        // tie-breaker: alphabetical
-        return aText.localeCompare(bText);
-    });
-}
 
 const Window = React.forwardRef<HTMLDivElement, WindowProps>(
     ({children, buttons, selected, setSelected}, ref) => {
@@ -101,7 +82,7 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
 
                     const index = Number(e.key);
                     if (typeof screen == "string") return;
-                    const filtered = sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter);
+                    const filtered = fuzzyFilter(screen, filter);
                     const btn = filtered[index];
 
                     searchRef.current!.value = "";
@@ -127,7 +108,7 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                 }
 
                 if (typeof screen != "string") {
-                    const length = screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())).length;
+                    const length = fuzzyFilter(screen, filter).length;
                     if (e.key == "ArrowDown" || e.key == "Tab") {
                         setSelected(prev => ++prev % length);
                         return;
@@ -140,7 +121,7 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                 if (e.key == "Enter") {
                     e.preventDefault();
                     if (typeof screen == "string") return;
-                    const filtered = sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter);
+                    const filtered = fuzzyFilter(screen, filter);
                     const btn = filtered[selected];
 
                     searchRef.current!.value = "";
@@ -203,7 +184,7 @@ const Window = React.forwardRef<HTMLDivElement, WindowProps>(
                     {(() => {
                             if (typeof screen == "string") return;
 
-                            let items = sortByStartsWith(screen.filter(({Name}) => Name.toLowerCase().includes(filter.toLowerCase())), filter);
+                            let items = fuzzyFilter(screen, filter);
 
                             if (!items.length) return <div className="screen-text" style={{whiteSpace: "pre-line"}}>{"<No Items>"}</div>
 
